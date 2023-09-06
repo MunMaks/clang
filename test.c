@@ -3,10 +3,10 @@
 #include <string.h>
 #include <math.h>
 
-struct Node {
+typedef struct Node {
     int data;            // Data element
     struct Node* next;   // Pointer to the next node
-};
+}Cellule, *Liste;
 
 
 int sommesCroissantes(int li, int col, int tab[][col]);
@@ -15,7 +15,18 @@ void boo(int untab[],int deuxtab[]);
 
 int LireChaine(char **s);
 
-int main(){
+int countLinked(struct Node* lst){
+    struct Node* index = lst;
+    int count = 1;
+    while (index != NULL){
+        count++;
+        index = index -> next;
+    }
+    return count;
+}
+
+
+int main(void){
 
     //int mat[5][5] = {{1, 2, 3, 4, 5},{2, 2, 3, 4, 5},{3, 2, 3, 4, 5}, {4, 2, 3, 4, 5}, {5, 2, 3, 4, 5}};
     //int res;
@@ -41,15 +52,13 @@ int main(){
 
     struct Node* current = head;
     while (current != NULL) {
-        // Access or manipulate current->data
-        
-        current = current->next; // Move to the next node
-
-        printf("current: %d\n", current -> data);
-    }
+        current = current->next;} // Move to the next node
     free(head);
     free(newNode);
     free(newNode2);
+
+    int count = countLinked(head);
+    printf("Count: %d\n", count);
     return 0;  
 }
 
