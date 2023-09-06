@@ -15,16 +15,13 @@ void boo(int untab[],int deuxtab[]);
 
 int LireChaine(char **s);
 
-int countLinked(struct Node* lst){
-    struct Node* index = lst;
-    int count = 1;
-    while (index != NULL){
-        count++;
-        index = index -> next;
-    }
-    return count;
-}
+int countLinked(struct Node* lst);
 
+void push(struct Node** head_ref, int new_data); // push in new head in Linked List
+
+void insertAfter(struct Node* prev_node, int new_data); // insert in Linked List 
+
+void append(struct Node** head_ref, int new_data); // append at the end of Linked List
 
 int main(void){
 
@@ -63,6 +60,7 @@ int main(void){
 }
 
 void boo(int untab[],int deuxtab[]){
+    // le test de QCM;
     int tmp;
     tmp = *untab;
     *untab = *deuxtab;
@@ -101,4 +99,83 @@ int LireChaine(char **s){
     else nbchar -= 1;
     free(*s);
     return nbchar;
+}
+
+int countLinked(struct Node* lst){
+    struct Node* index = lst;
+    int count = 1;
+    while (index != NULL){
+        count++;
+        index = index -> next;
+    }
+    return count;
+}
+
+void push(struct Node** head_ref, int new_data)
+{
+    /* 1. allocate node */
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+ 
+    /* 2. put in the data  */
+    new_node -> data = new_data;
+ 
+    /* 3. Make next of new node as head */
+    new_node->next = (*head_ref);
+ 
+    /* 4. move the head to point to the new node */
+    (*head_ref) = new_node;
+}
+
+
+void insertAfter(struct Node* prev_node, int new_data) //insert in Linked List
+{
+    /*1. check if the given prev_node is NULL */
+    if (prev_node == NULL) {
+        printf("the given previous node cannot be NULL");
+        return;
+    }
+ 
+    /* 2. allocate new node */
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+ 
+    /* 3. put in the data */
+    new_node->data = new_data;
+ 
+    /* 4. Make next of new node as next of prev_node */
+    new_node->next = prev_node->next;
+ 
+    /* 5. move the next of prev_node as new_node */
+    prev_node->next = new_node;
+}
+
+
+void append(struct Node** head_ref, int new_data)  // append at the end of the Linked List
+{
+    /* 1. allocate node */
+    struct Node* new_node
+        = (struct Node*)malloc(sizeof(struct Node));
+ 
+    struct Node* last = *head_ref; /* used in step 5*/
+ 
+    /* 2. put in the data */
+    new_node->data = new_data;
+ 
+    /* 3. This new node is going to be the last node, so
+    make next of it as NULL*/
+    new_node->next = NULL;
+ 
+    /* 4. If the Linked List is empty, then make the new
+    * node as head */
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        return;
+    }
+ 
+    /* 5. Else traverse till the last node */
+    while (last->next != NULL)
+        last = last->next;
+ 
+    /* 6. Change the next of last node */
+    last->next = new_node;
+    return;
 }
