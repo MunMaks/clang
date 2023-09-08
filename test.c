@@ -270,23 +270,23 @@ bool inLinkedList(LinkedList head, int value){
 int AddTrie(LinkedList *head, int x){
     LinkedList tmp = (struct Node*)malloc(sizeof(struct Node));    
     LinkedList curr = *head; 
-    if(tmp == NULL) return 0;
     
-    if (*head == NULL) return *head = tmp;
-
-    if (*head -> data >= x){
+    if (*head == NULL){
+        tmp -> data = x;
+        *head = tmp;
+    }
+    if ((*head)-> data >= x){
         tmp -> next = *head;
         *head = tmp;
     }
+
     else{
-        while(curr -> next =! NULL && curr -> next-> data < x){
+        while(curr -> next != NULL && curr-> next -> data < x){
             curr = curr -> next;
-        }
         tmp -> next = curr -> next;
-        curr -> next = tmp;
+        curr -> next = tmp; 
+        }
     }
-    
-    
     free(tmp);
     free(curr);
 
