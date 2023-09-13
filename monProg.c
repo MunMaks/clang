@@ -11,6 +11,23 @@ void lecture_de_matrice(void);
 void MemSwap(void *Un , void *Deux , int taille);
 
 
+/* BUT : resoud une equation du second degre    */
+/* PARAMETRES : valeur :les coefficients entiers*/
+/*             adresse : 2 solutions possibles  */
+/* RETOUR : le nombre de solution               */
+/* -1 equation degeneree                        */
+/* 0 pas de solution                            */
+/* 1 un racine placee a l'adresse x             */
+/* 2 deux racines placees aux adresses x et y   */
+/*
+int resoudre(int a, int b, int c, double d){
+}
+
+int main(void){
+  double r1,r2;
+  return 0;
+}
+*/
 
 int main(void){
     /*int val = -100;
