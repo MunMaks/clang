@@ -80,9 +80,13 @@ int main(void){
     manip(&head);
     //append(&head, 70);
     PrintLinkedList(head);
+
     printf("%d\n",countLinked(head));
+
     PrintInverseLinkedList(head);
-    if (inLinkedList(head, 2)) {printf("%d in Linked List!\n", 2);}
+    if (inLinkedList(head, 2)) {
+        printf("%d in Linked List!\n", 2);
+    }
 
     free(head);
 
