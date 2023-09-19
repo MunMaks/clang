@@ -14,6 +14,10 @@ int min_of_three(int a, int b, int c);
 
 int puissance (int n, int p);
 
+int diviseurs(int number);
+
+void maison(int n);
+
 int main()
 {
     int x = 3;
@@ -22,11 +26,14 @@ int main()
     int a = -924, b = 992, c = 993;
     int maxim = max_of_three(a, b, c);
     int minim = min_of_three(a, b, c);
-    printf("%d\n", maxim);
-    printf("%d\n", minim);
+    //printf("%d\n", maxim);
+    //printf("%d\n", minim);
     
     int num_puissance = puissance(-8, 4);
-    printf("puissance: %d\n", num_puissance);
+    //printf("puissance: %d\n", num_puissance);
+    int var = 6;
+    int div = diviseurs(var);
+    printf("DIV: %d\n", div);
     return 0;
 }
 
@@ -70,4 +77,21 @@ int puissance (int n, int p){
         res = res * n;
     }
     return res;
+}
+
+int diviseurs(int number) {
+    if (number <= 0) return -1;
+    int count = 0;
+    for (int i = 1; i <= number; ++i){
+        if ((number % i) == 0){
+            printf("%d\n", i);
+            ++count;
+        }
+    }
+    //printf("%d a %d diviseurs\n", number, count);
+    return count;
+}
+
+void maison(int n){
+    
 }
