@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string.h>
 
+//#define SIZE 21
+
 double polynome(int a, int b, int c);
 
 void ascii_triangle(int n);
@@ -18,6 +20,14 @@ int diviseurs(int number);
 
 void maison(int n);
 
+int max_tab(int tab[], int size);
+
+int are_equal_tab(int tab1[], int tab2[], int size);
+
+int length(int *array);
+
+float mean_positive(int* array, int size);
+
 int main()
 {
     int x = 3;
@@ -31,9 +41,14 @@ int main()
     
     int num_puissance = puissance(-8, 4);
     //printf("puissance: %d\n", num_puissance);
-    int var = 6;
-    int div = diviseurs(var);
-    printf("DIV: %d\n", div);
+    //int var = 6;
+    //int div = diviseurs(var);
+    //printf("DIV: %d\n", div);
+    int tab[] = {20, -98, 15, -59, 86, -21, -95, 80, -71, 43, 75, -7, -34, -83};
+    int len = length(tab);
+    printf("len: %d\n", len);
+    float mediana = mean_positive(tab, len);
+    printf("meidana: %f\n", mediana);
     return 0;
 }
 
@@ -92,6 +107,51 @@ int diviseurs(int number) {
     return count;
 }
 
-void maison(int n){
-    
+int max_tab(int tab[], int size){
+    if (size <= 0) return -1;
+
+    int maximum = 0;
+    for (int i = 0; i < size; ++i){
+        if (tab[i] > maximum){
+            maximum = tab[i];
+        }
+    }
+    return maximum; 
+} 
+
+int are_equal_tab(int tab1[], int tab2[], int size){
+    for (int i = 0; i < size; ++i){
+        if (tab1[i] != tab2[i]){
+            return 0;
+        }
+    }
+    return 1;
 }
+
+int length(int *array){
+    int arr_size = sizeof(array) / sizeof(array[0]);
+    return arr_size; 
+}
+
+float mean_positive(int* array, int size){
+
+    if (size <= 0) return 0.0;
+
+    float count = 0;
+    float mean;
+    for (int i = 0; i < size; ++i) {
+        //if (array[i] == array[i+1]) break;
+        if (array[i] >= 0) {
+            mean += array[i];
+            printf("mean in loop: %f\n", mean);
+            count++;        
+        }
+    }
+
+    printf("mean: %f, count : %f\n", mean, count);
+    return (mean != 0 && count != 0) ? mean / count  : 0;
+}
+
+/*void maison(int n){
+    
+}*/
