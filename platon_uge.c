@@ -74,10 +74,10 @@ int main()
     //int tab_ex[] = {1, 2, 3, 4, 5, 6, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 10};  // from 6 to 17 (included) they become smaller.
     //printf("result: %d\n", est_partie_triee(tab_ex));
 
-    int size1 = 8, size2 = 8;
+    int size1 = 8, size2 = 6;
 
     int arr1[] = {1, 3, 5, 7, 9, 11, 13, 14};
-    int arr2[] = {0, 1, 5, 6, 8, 11, 15, 16};
+    int arr2[] = {0, 1, 5, 6, 8, 11};
     print_diff_sym(arr1, size1, arr2, size2);
 
     return 0;
@@ -233,40 +233,41 @@ int est_partie_triee(int* tab){
 
 void print_diff_sym(int* arr1, int size1, int* arr2, int size2){
     /*
-    A : 1, 3, 5, 7, 9, 11, 13
-    B : 0, 1, 5, 6, 8, 11
-    A diff B : 0, 3, 6, 7, 8, 9, 13
+    int A[] = {1, 3, 5, 7, 9, 11, 13, 14};
+    int B[] = {0, 1, 5, 6, 8, 11, 15, 16};
+    A diff B : 0, 3, 6, 7, 8, 9, 13, 14, 15, 16
     */
     int taille_max = (size1 >= size2) ? size1 : size2;
 
     int difference[size1 + size2];
     int i1 = 0;
     int i2 = 0;
-    //int remain = 0;
     int diff_count = 0;
 
     for (int i = 0; i < size1 + size2; ++i){
         if (i1 == size1){
-            if (size1 < size2){
-                for (int idx = 0; idx <= (size2 - size1); ++idx){
+            if (i2 < size2){
+                for (int idx = 0; idx <= (size2 - i2); ++idx){
                     difference[diff_count] = arr2[i2];
                     ++i2;
+                    ++diff_count;
                 }
             }
             break;
         }
 
         if (i2 == size2){
-            if (size1 > size2){
-                for (int idx = 0; idx <= (size1 - size2); ++idx){
+            if (i1 < size1){
+                for (int idx = 0; idx <= (size1 - i1); ++idx){
                     difference[diff_count] = arr1[i1];
                     ++i1;
+                    ++diff_count;
                 }
             }
             break;
         }
 
-        if ((arr1[i1] == arr2[i2])) { //  && (i1 != size1 || i2 != size2) 
+        if (arr1[i1] == arr2[i2]) { //  && (i1 != size1 || i2 != size2) 
             ++i1;
             ++i2;
             continue;
@@ -285,7 +286,7 @@ void print_diff_sym(int* arr1, int size1, int* arr2, int size2){
 
     }
     for (int i = 0; i < diff_count; ++i){
-        printf("A diffe B: %d\n", difference[i]);
+        printf("%d ", difference[i]);
     }
 }
 
