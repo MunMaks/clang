@@ -5,6 +5,31 @@
 #include <string.h>
 
 #define SIZE 21
+#define MAX 20
+#define N 20
+
+typedef struct People{
+    char first_name[63];
+    char last_name[64];
+    int age;
+}People;
+
+typedef struct Vector3d{
+    int x;
+    int y;
+    int z;
+}Vector3d;
+
+typedef enum {
+    lundi,
+    mardi,
+    mercredi,
+    jeudi,
+    vendredi,
+    samedi,
+    dimanche
+} Jour;
+
 
 double polynome(int a, int b, int c);
 
@@ -19,6 +44,8 @@ int puissance (int n, int p);
 int diviseurs(int number);
 
 void maison(int n);
+
+void remplir(char tab[MAX][MAX], int li, int col);
 
 int max_tab(int tab[], int size);
 
@@ -35,6 +62,18 @@ int nb_inversions(int t[], int taille);
 int est_partie_triee(int* tab);
 
 void print_diff_sym(int* arr1, int size1, int* arr2, int size2);
+
+int length(char* word);
+
+int scalar_product3d(Vector3d u, Vector3d v);
+
+int pgcd(int a, int b);
+
+void premiers_entre_eux(int t[][N]);
+
+void remplir(char tab[MAX][MAX], int li, int col);
+
+int est_palindrome(char s[]);
 
 int main()
 {
@@ -290,6 +329,148 @@ void print_diff_sym(int* arr1, int size1, int* arr2, int size2){
     }
 }
 
-/*void maison(int n){
-    
+
+/*
+
+int main(int argc, char* argv[]){
+    int X = 0, Y = 0, Z = 0;
+    //int total = 0;
+    while(--argc > 0){
+        //printf("%s ", argv[argc]);
+        char* word = argv[argc];
+        int len_word = length(word);
+
+        for (int i = 0; i < len_word; ++i){
+            if (word[i] >= 'A' && word[i] <= 'A' + 26) ++X;
+
+            else if(word[i] >= 'a' && word[i] <= 'a' + 26) ++Y;
+            
+            else ++Z;
+            //++total;
+        }
+    }
+
+    printf("Nombre de majuscules : %d\n", X);
+    printf("Nombre de miniscules : %d\n", Y);
+    printf("Nombre d'autres caractères : %d\n", Z);
+    return 0;
+}
+
+int length(char* word){
+    int i = 0;
+    while (word[i] != '\0') ++i;
+    return i;
+}
+
+*/
+/*int string_length(char* s){
+    int i = 0;
+    while (s[i] != '\0') ++i;
+    return i;
 }*/
+
+int length(char* word){
+    int i = 0;
+    while (word[i] != '\0') ++i;
+    return i;
+}
+
+void to_upper_in_string(char* s) {
+    if (s == NULL) {return;}
+        // segmentation faults 
+    int len = length(s);
+    for (int i = 0; i < len; i++) {
+        // On change les lettres miniscules en majuscule s'il est necessaire.
+        if (s[i] >= 'a' && s[i] <= 'z')
+            s[i] = s[i] - 32;
+    }
+}
+
+int scalar_product3d(Vector3d u, Vector3d v) {
+    int result = 0;
+    result = (u.x) * (v.x) + (u.y) * (v.y) + (u.z) * (v.z);
+    return result;
+}
+
+int pgcd(int a, int b){
+    int res;
+      
+    for(int i = 1; i <= a && i <= b; ++i)
+    {
+        if((a % i) == 0 && (b % i == 0)){
+            res = i;
+        }
+    }
+    return res;
+}
+
+void premiers_entre_eux(int t[][N]){
+    for (int i = 0; i < N; ++i){
+        for (int j = 0; j < N; ++j){
+            if(i == 0 && j == 0) {
+                t[i][j] = -1;
+            }
+            else if ( pgcd(i, j) == 1 ) {
+                t[i][j] = 1;
+            }
+            else t[i][j] = 0;
+        }
+    }
+}
+
+void remplir(char tab[MAX][MAX], int li, int col){
+    int letter = 0;
+    for (int i = 0; i < li; ++i){
+        for (int j = 0; j < col; ++j){
+            tab[i][j] = 'a' + letter;  //ASCII 'a'+1 = 'b'
+            //printf("%c ",  tab[i][j]);
+            ++letter;
+            if (letter == 26) letter = 0;
+        }
+        //printf("\n");  // 2 tentatives ratees a cause de deux printf()...
+    }
+}
+/*
+void fill_tab(int LI, int COL, int N, int tab[][COL][N]);
+
+void fill_tab(int LI, int COL, int N, int tab[][COL][N]){
+    int count = 1;
+    for (int i = 0; i < LI; ++i){
+
+        for (int j = 0; j < COL; ++j){
+          
+            for (int k = 0; k < N; ++k){
+                tab[i][j][k] = count;
+                ++count;
+            }
+        }
+    }
+}*/
+/*
+int index_max_3d(int t[M][M][M], int s1, int s2, int s3, int* m1, int* m2, int* m3);
+int index_max_3d(int t[M][M][M], int s1, int s2, int s3, int* m1, int* m2, int* m3){
+    int valeur_max = t[0][0][0];
+    for (int i = 0; i < s1; ++i){
+        for (int j = 0; j < s2; ++j){
+            for (int k = 0; k < s3; ++k){
+                if (valeur_max < t[i][j][k]){
+                    valeur_max = t[i][j][k];
+
+                    *m1 = i; *m2 = j; *m3 = k;
+                }
+
+            }
+        }
+    }
+    return valeur_max;
+}*/
+
+int est_palindrome(char s[]){
+    int len = string_length(s);
+    int half = len / 2;
+
+    for (int i = 0; i < half; ++i){
+        if (s[i] != s[len-i-1]) { return 0; }
+    }
+    return 1;
+}
