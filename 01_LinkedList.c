@@ -20,11 +20,11 @@ void insertIndexNode(LinkedList* head, int new_data, int index);
 
 void push_back(LinkedList* head, int new_data);
 
-void deleteHead(LinkedList* head);
+void deleteByVal(LinkedList* head, int val);
 
 void deleteByIndexLinked(LinkedList* head, int index);
 
-void deleteLastLinked(LinkedList* head);
+void deleteLastNode(LinkedList* head);
 
 int countNodes(LinkedList head);
 
@@ -44,13 +44,11 @@ int main(int argc, char *argv[]){
     // insertIndexNode(&head, 69, 3);
     push_back(&head, 14);
     push_back(&head, 15);
-
+    // deleteByVal(&head, 14);
+    // deleteByIndexLinked(&head, 2);
+    deleteLastNode(&head);
     printf("\nAFTER: \n");
     afficheLinkedList(head);
-    int count = countNodes(head);
-
-    printf("nb nodes: %d\n", count);
-    deleteLastLinked(&head);
 
     freeLinkedList(head);
 }
@@ -69,7 +67,6 @@ void afficheLinkedList(LinkedList head){
         head = head->next;
     }
 }
-
 
 void insertFirstNode(LinkedList *head, int new_data){
     struct Node* new_node = creationDuNode(new_data);
@@ -105,45 +102,65 @@ void push_back(LinkedList* head, int new_data){
     curr->next = new_node;
 }
 
-void deleteHead(LinkedList* head){
-    if (*head == NULL) {
-        printf("LinkedList est vide.\n");
+void deleteByVal(LinkedList* head, int val){
+    // If head is NULL, then the list is empty
+    if (head == NULL) {
         return;
     }
-
-    struct Node* tmp = *head;
-    *head = (*head)->next;
-    free(tmp);
+    // If current node is the node to be deleted 
+    if ((*head)->val == val) {
+        struct Node* del_node = (*head);
+        *head = (*head)->next;
+        free(del_node);
+        return;
+    }
+    
+    deleteByVal(&((*head)->next), val); // Recursively call the function passing the reference and key to the node
 }
 
 void deleteByIndexLinked(LinkedList* head, int index){
-    if (!index){ deleteHead(head); return; }
+    if (!index){
+        struct Node* del_node = (*head);
+        *head = (*head)->next;
+        free(del_node);
+        return;
+    }
     struct Node* curr = *head;
+    struct Node* prev = NULL;
     int i;
-    for (i = 0; curr != NULL && i < index-1; ++i) { curr = curr->next; }
-    if (curr == NULL || curr->next == NULL) { printf("Index n'est pas valide\n"); return; }
 
-    struct Node* temp = curr->next;
-    curr->next = curr->next->next;
-    free(temp);
+    for (i = 0; curr != NULL && i < index; ++i) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (curr == NULL) {
+        printf("Index out of bounds\n");
+        return;
+    }
+
+    prev->next = curr->next;
+    free(curr);
 }
 
-void deleteLastLinked(LinkedList* head){
+void deleteLastNode(LinkedList* head){
     if (*head == NULL) {
         printf("LinkedList est vide.\n");
         return;
     }
     if ((*head)->next == NULL){
-        free(*head);
-        *head = NULL;
+        struct Node* del_node = (*head);
+        *head = (*head)->next;
+        free(del_node);
         return;
     }
     struct Node* curr = *head;
 
     while (curr->next->next != NULL) { curr = curr->next; }
 
-    free(curr->next);
-    curr->next = NULL;
+    struct Node* del_node = curr;
+    curr = (curr)->next;
+    free(del_node);
 }
 
 
