@@ -163,7 +163,7 @@ void push_head(LinkedList* head_ref, int new_data)
 }
 
 
-void insertAfter(LinkedList prev_node, int new_data) //insert in Linked List
+void insertAfter(LinkedList prev_node, int new_data) // insert in Linked List
 {
     /*1. check if the given prev_node is NULL */
     if (prev_node == NULL) {
