@@ -12,6 +12,8 @@ struct Node* creationDuNode(int data);
 
 void afficheLinkedList(LinkedList head);
 
+void afficheInverseLinkedList(LinkedList head);
+
 void insertFirstNode(LinkedList* head, int new_data);
 
 void insertAfter(LinkedList head, int new_data);
@@ -28,7 +30,17 @@ void deleteLastNode(LinkedList* head);
 
 int countNodes(LinkedList head);
 
+int inLinkedList(LinkedList head, int value);
+
 void freeLinkedList(LinkedList head);
+
+struct Node* mergeTwoLists(struct Node* list1, struct Node* list2);     // added de Leetcode
+
+struct Node* deleteDuplicates(struct Node* head);                       // added de Leetcode
+
+struct Node* addTwoNumbers(struct Node* l1, struct Node* l2);           // added de Leetcode
+
+int hasCycle(struct Node *head);                                        // added de Leetcode
 
 
 int main(int argc, char *argv[]){
@@ -49,14 +61,18 @@ int main(int argc, char *argv[]){
     // insertFirstNode(&head, 23);  // ajouter au début
     // insertIndexNode(&head, 69, 1);  // ajouter par index
     push_back(&head, 14);  // ajouter à la fin
+    push_back(&head, 14);
+    push_back(&head, 14);
     push_back(&head, 15);
+    head = deleteDuplicates(head);
     // deleteByIndexLinked(&head, 2);  // supprimer par index
-    deleteByVal(&head, 14);   // supprimer par value
+    // deleteByVal(&head, 14);   // supprimer par value
     deleteLastNode(&head);    // supprimer dernière node
     printf("\nAFTER: \n");
     afficheLinkedList(head);  // affichage
 
     freeLinkedList(head);  // libérer la mémoire de toutes les nodes de LinkedList
+    return 0;
 }
 
 
@@ -73,6 +89,13 @@ void afficheLinkedList(LinkedList head){
     while(NULL != curr){
         printf("adress: %p, value: %d\n", curr, curr->val);
         curr = curr->next;
+    }
+}
+
+void afficheInverseLinkedList(LinkedList head){
+    if (head != NULL){
+        afficheInverseLinkedList(head->next);
+        printf("Value de dernière Node à première: %d\n", head->val);
     }
 }
 
@@ -187,6 +210,17 @@ int countNodes(LinkedList head){
     return count;
 }
 
+int inLinkedList(LinkedList head, int value){
+    struct Node* curr = head;
+    while (curr != NULL){
+        if (curr->val == value){
+            return 1;
+        }
+        curr = curr->next;
+    }
+    return 0;
+}
+
 void freeLinkedList(LinkedList head) {
     struct Node* curr = head;
     while (curr != NULL) {
@@ -194,4 +228,82 @@ void freeLinkedList(LinkedList head) {
         curr = curr->next;
         free(tmp);
     }
+}
+
+struct Node* mergeTwoLists(struct Node* list1, struct Node* list2){  // merge two sorted LinkedList, Leetcode
+    if (NULL == list1){ return list2;}
+    if (NULL == list2){ return list1;}
+
+    if (list1->val < list2->val){
+        list1->next = mergeTwoLists(list1->next, list2);
+        return list1;
+    }
+    else{
+        list2->next = mergeTwoLists(list1, list2->next);
+        return list2;
+    }
+}
+
+struct Node* deleteDuplicates(struct Node* head){  // Remove Duplicates from Sorted LinkedList, Leetcode
+    if(!head) { return NULL; }
+    
+    struct Node* curr = head, *del_node;
+    while(curr && curr->next){
+        if(curr->val == curr->next->val){
+            del_node = curr->next;
+            curr->next = curr->next->next;
+            free(del_node);
+        }
+        else { curr = curr->next; }
+    }
+    return head;
+}
+
+int hasCycle(struct Node *head) {  // Linked List Cycle, Leetcode
+    if (NULL == head || NULL == head->next){ return 0;}
+    struct Node* slow = head, *fast = head;
+    while (fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast){ return 1; }
+    } 
+    return 0;
+}
+
+struct Node* addTwoNumbers(struct Node* l1, struct Node* l2) {  // Add the two numbers and return the sum LinkedList, Leetcode
+    struct Node* ans = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* temp = ans;
+    int carry = 0, sum = 0;
+    while(l1 && l2) {
+        sum = l1->val + l2->val + carry;
+        temp->next = (struct Node*)malloc(sizeof(struct Node));
+        temp->next->val = sum % 10;
+        carry = sum / 10;
+        temp = temp->next;
+        l1 = l1->next;
+        l2 = l2->next;
+    }
+    while(l1) {
+        sum = l1->val + carry;
+        temp->next = (struct Node*)malloc(sizeof(struct Node));
+        temp->next->val = sum % 10;
+        carry = sum / 10;
+        temp = temp->next;
+        l1 = l1->next;
+    }
+    while(l2) {
+        sum = l2->val + carry;
+        temp->next = (struct Node*)malloc(sizeof(struct Node));
+        temp->next->val = sum % 10;
+        carry = sum / 10;
+        temp = temp->next;
+        l2 = l2->next;
+    }
+    if(carry) {
+        temp->next = (struct Node*)malloc(sizeof(struct Node));
+        temp->next->val = carry;
+        temp = temp->next;
+    }
+    temp->next = NULL;
+    return ans->next;
 }
