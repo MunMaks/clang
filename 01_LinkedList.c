@@ -30,6 +30,7 @@ int countNodes(LinkedList head);
 
 void freeLinkedList(LinkedList head);
 
+
 int main(int argc, char *argv[]){
     struct Node* head = creationDuNode(1);
     struct Node* first = creationDuNode(2);
@@ -39,19 +40,25 @@ int main(int argc, char *argv[]){
     first->next = second;
     second->next = NULL;
 
-    afficheLinkedList(head);
-    // insertFirstNode(&head, 23);
-    // insertIndexNode(&head, 69, 3);
-    push_back(&head, 14);
-    push_back(&head, 15);
-    // deleteByVal(&head, 14);
-    // deleteByIndexLinked(&head, 2);
-    deleteLastNode(&head);
-    printf("\nAFTER: \n");
-    afficheLinkedList(head);
+    /* Une remarque:
+    *  LinkedList == struct Node*
+    *  Autrement dit on peut remplacer LinkedList par struct Node* et à l'inverse
+    */
 
-    freeLinkedList(head);
+    afficheLinkedList(head);
+    // insertFirstNode(&head, 23);  // ajouter au début
+    // insertIndexNode(&head, 69, 1);  // ajouter par index
+    push_back(&head, 14);  // ajouter à la fin
+    push_back(&head, 15);
+    // deleteByIndexLinked(&head, 2);  // supprimer par index
+    deleteByVal(&head, 14);   // supprimer par value
+    deleteLastNode(&head);    // supprimer dernière node
+    printf("\nAFTER: \n");
+    afficheLinkedList(head);  // affichage
+
+    freeLinkedList(head);  // libérer la mémoire de toutes les nodes de LinkedList
 }
+
 
 struct Node* creationDuNode(int val) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
@@ -62,13 +69,15 @@ struct Node* creationDuNode(int val) {
 
 
 void afficheLinkedList(LinkedList head){
-    while(NULL != head){
-        printf("adress: %p, value: %d\n", head, head->val);
-        head = head->next;
+    struct Node* curr = head;
+    while(NULL != curr){
+        printf("adress: %p, value: %d\n", curr, curr->val);
+        curr = curr->next;
     }
 }
 
 void insertFirstNode(LinkedList *head, int new_data){
+    // ajout au début de LinkedList
     struct Node* new_node = creationDuNode(new_data);
     new_node->next = *head;
     *head = new_node;
@@ -76,7 +85,7 @@ void insertFirstNode(LinkedList *head, int new_data){
 
 void insertAfter(LinkedList curr, int new_data){
     if (curr == NULL) {
-        printf("the given node cann't be NULL");
+        printf("Node est NULL, réessayez!\n");
         return; }
     struct Node* new_node = creationDuNode(new_data);
     new_node->next = curr->next;
@@ -84,6 +93,7 @@ void insertAfter(LinkedList curr, int new_data){
 }
 
 void insertIndexNode(LinkedList *head, int new_data, int index){
+
     struct Node* curr = *head;
     int i;
     for (i = 0; curr != NULL && i < index-1; ++i) { curr = curr->next; }
@@ -92,34 +102,33 @@ void insertIndexNode(LinkedList *head, int new_data, int index){
 }
 
 void push_back(LinkedList* head, int new_data){
+    // ajoute une nouvelle node à la fin
     if (head == NULL) { insertFirstNode(head, new_data); }
     struct Node* curr = *head;
     struct Node* new_node = creationDuNode(new_data);
 
-    while (curr->next != NULL){
-        curr = curr->next;
-    }
+    while (curr->next != NULL) { curr = curr->next; }
     curr->next = new_node;
 }
 
 void deleteByVal(LinkedList* head, int val){
-    // If head is NULL, then the list is empty
+    // Liste est vide, donc on fini
     if (head == NULL) {
         return;
     }
-    // If current node is the node to be deleted 
+    // node qu'on va supprimer 
     if ((*head)->val == val) {
         struct Node* del_node = (*head);
         *head = (*head)->next;
         free(del_node);
         return;
     }
-    
-    deleteByVal(&((*head)->next), val); // Recursively call the function passing the reference and key to the node
+    // fonction récursive qui va supprimer élément par value
+    deleteByVal(&((*head)->next), val); 
 }
 
 void deleteByIndexLinked(LinkedList* head, int index){
-    if (!index){
+    if (!index){  // si index est première node
         struct Node* del_node = (*head);
         *head = (*head)->next;
         free(del_node);
@@ -144,25 +153,29 @@ void deleteByIndexLinked(LinkedList* head, int index){
 }
 
 void deleteLastNode(LinkedList* head){
-    if (*head == NULL) {
-        printf("LinkedList est vide.\n");
-        return;
-    }
-    if ((*head)->next == NULL){
-        struct Node* del_node = (*head);
-        *head = (*head)->next;
-        free(del_node);
+    if (NULL == (*head)) {
+        printf("Liste est vide, réessayez! \n");
         return;
     }
     struct Node* curr = *head;
+    struct Node* prev = NULL;
 
-    while (curr->next->next != NULL) { curr = curr->next; }
+    // Traverser toute la liste avant dernière node
+    while (curr->next != NULL) {
+        prev = curr;
+        curr = curr->next;
+    }
+    // vérifier s'il n'y a qu'une seule node in LinkedList
+    if (prev == NULL) {
+        free(curr);
+        *head = NULL;
+    }
+    else{
+        prev->next = NULL;
+        free(curr);
+    }
 
-    struct Node* del_node = curr;
-    curr = (curr)->next;
-    free(del_node);
 }
-
 
 int countNodes(LinkedList head){
     int count = 0;
