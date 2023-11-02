@@ -1,61 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef struct Node{
     int val;
     struct Node* next;
 }*LinkedList;
 
+/* Une remarque:
+*  "LinkedList" == "struct Node*""
+*  Autrement dit on peut remplacer LinkedList par struct Node* et à l'inverse
+*/
 
-struct Node* creationDuNode(int data);
+struct Node* creationDuNode(int data);      // ligne 74
 
-void afficheLinkedList(LinkedList head);
+void afficheLinkedList(LinkedList head);    // ligne 82
 
-void afficheInverseLinkedList(LinkedList head);
+void afficheInverseLinkedList(LinkedList head);     // ligne 90
 
-void insertFirstNode(LinkedList* head, int new_data);
+void insertFirstNode(LinkedList* head, int value);  // ligne 97
 
-void insertAfter(LinkedList head, int new_data);
+void insertAfter(LinkedList head, int value);       // ligne 105
 
-void insertIndexNode(LinkedList* head, int new_data, int index);
+void insertIndexNode(LinkedList* head, int value, int index);   // ligne 114
 
-void push_back(LinkedList* head, int new_data);
+void push_back(LinkedList* head, int value);    // ligne 112
 
-void deleteByVal(LinkedList* head, int val);
+void deleteByVal(LinkedList* head, int val);    // ligne 133
 
-void deleteByIndexLinked(LinkedList* head, int index);
+void deleteByIndexLinked(LinkedList* head, int index);  // ligne 147
 
-void deleteLastNode(LinkedList* head);
+void deleteLastNode(LinkedList* head);  // ligne 168
 
-int countNodes(LinkedList head);
+int countNodes(LinkedList head);    // ligne 180
 
-int inLinkedList(LinkedList head, int value);
+int inLinkedList(LinkedList head, int value);   // ligne 190
 
-void freeLinkedList(LinkedList head);
+void freeLinkedList(LinkedList head);   // ligne 199
 
-struct Node* mergeTwoLists(struct Node* list1, struct Node* list2);     // added de Leetcode
+struct Node* mergeTwoLists(struct Node* list1, struct Node* list2);         // added de Leetcode  ligne 208
 
-struct Node* deleteDuplicates(struct Node* head);                       // added de Leetcode
+struct Node* deleteDuplicates(struct Node* head);                           // added de Leetcode  ligne 222
 
-struct Node* addTwoNumbers(struct Node* l1, struct Node* l2);           // added de Leetcode
+struct Node* addTwoNumbers(struct Node* list_un, struct Node* list_deux);   // added de Leetcode  ligne 237
 
-int hasCycle(struct Node *head);                                        // added de Leetcode
+int hasCycle(struct Node *head);                                            // added de Leetcode  ligne 248
 
 
 int main(int argc, char *argv[]){
-    struct Node* head = creationDuNode(1);
-    struct Node* first = creationDuNode(2);
-    struct Node* second = creationDuNode(3);
-
-    head->next = first;
-    first->next = second;
-    second->next = NULL;
-
-    /* Une remarque:
-    *  LinkedList == struct Node*
-    *  Autrement dit on peut remplacer LinkedList par struct Node* et à l'inverse
-    */
+    struct Node* head = NULL;
+    push_back(&head, 1);
+    push_back(&head, 2);
+    push_back(&head, 3);
 
     afficheLinkedList(head);
     // insertFirstNode(&head, 23);  // ajouter au début
@@ -64,7 +59,7 @@ int main(int argc, char *argv[]){
     push_back(&head, 14);
     push_back(&head, 14);
     push_back(&head, 15);
-    head = deleteDuplicates(head);
+    // head = deleteDuplicates(head);
     // deleteByIndexLinked(&head, 2);  // supprimer par index
     // deleteByVal(&head, 14);   // supprimer par value
     deleteLastNode(&head);    // supprimer dernière node
@@ -99,36 +94,37 @@ void afficheInverseLinkedList(LinkedList head){
     }
 }
 
-void insertFirstNode(LinkedList *head, int new_data){
+void insertFirstNode(LinkedList *head, int value){
     // ajout au début de LinkedList
-    struct Node* new_node = creationDuNode(new_data);
+    struct Node* new_node = creationDuNode(value);
+    if (*head == NULL) {*head = new_node; return;}
     new_node->next = *head;
     *head = new_node;
 }
 
-void insertAfter(LinkedList curr, int new_data){
+void insertAfter(LinkedList curr, int value){
     if (curr == NULL) {
         printf("Node est NULL, réessayez!\n");
         return; }
-    struct Node* new_node = creationDuNode(new_data);
+    struct Node* new_node = creationDuNode(value);
     new_node->next = curr->next;
     curr->next = new_node;
 }
 
-void insertIndexNode(LinkedList *head, int new_data, int index){
-
+void insertIndexNode(LinkedList *head, int value, int index){
     struct Node* curr = *head;
     int i;
     for (i = 0; curr != NULL && i < index-1; ++i) { curr = curr->next; }
-    if (!i && !index){ insertFirstNode(head, new_data); }
-    else { insertAfter(curr, new_data); }
+    if (!i && !index){ insertFirstNode(head, value); }
+    else { insertAfter(curr, value); }
 }
 
-void push_back(LinkedList* head, int new_data){
+void push_back(LinkedList* head, int value){
     // ajoute une nouvelle node à la fin
-    if (head == NULL) { insertFirstNode(head, new_data); }
+    struct Node* new_node = creationDuNode(value);
+
+    if (*head == NULL) { *head = new_node; return; }
     struct Node* curr = *head;
-    struct Node* new_node = creationDuNode(new_data);
 
     while (curr->next != NULL) { curr = curr->next; }
     curr->next = new_node;
@@ -136,9 +132,7 @@ void push_back(LinkedList* head, int new_data){
 
 void deleteByVal(LinkedList* head, int val){
     // Liste est vide, donc on fini
-    if (head == NULL) {
-        return;
-    }
+    if (head == NULL) { printf("Liste est vide!\n"); return; }
     // node qu'on va supprimer 
     if ((*head)->val == val) {
         struct Node* del_node = (*head);
@@ -166,38 +160,21 @@ void deleteByIndexLinked(LinkedList* head, int index){
         curr = curr->next;
     }
 
-    if (curr == NULL) {
-        printf("Index out of bounds\n");
-        return;
-    }
-
+    if (curr == NULL) { printf("Index est invqlide\n"); return; }
     prev->next = curr->next;
     free(curr);
 }
 
 void deleteLastNode(LinkedList* head){
-    if (NULL == (*head)) {
-        printf("Liste est vide, réessayez! \n");
-        return;
-    }
+    if (NULL == (*head)) { printf("Liste est vide, réessayez! \n"); return; }
     struct Node* curr = *head;
     struct Node* prev = NULL;
 
     // Traverser toute la liste avant dernière node
-    while (curr->next != NULL) {
-        prev = curr;
-        curr = curr->next;
-    }
-    // vérifier s'il n'y a qu'une seule node in LinkedList
-    if (prev == NULL) {
-        free(curr);
-        *head = NULL;
-    }
-    else{
-        prev->next = NULL;
-        free(curr);
-    }
-
+    while (curr->next != NULL) { prev = curr; curr = curr->next; }
+    if (NULL == prev) { *head = NULL; } // vérifier s'il n'y a qu'un seul node in LinkedList
+    else { prev->next = NULL; }         // plus qu'un node
+    free(curr);
 }
 
 int countNodes(LinkedList head){
@@ -213,9 +190,7 @@ int countNodes(LinkedList head){
 int inLinkedList(LinkedList head, int value){
     struct Node* curr = head;
     while (curr != NULL){
-        if (curr->val == value){
-            return 1;
-        }
+        if (curr->val == value){ return 1; }
         curr = curr->next;
     }
     return 0;
@@ -230,22 +205,22 @@ void freeLinkedList(LinkedList head) {
     }
 }
 
-struct Node* mergeTwoLists(struct Node* list1, struct Node* list2){  // merge two sorted LinkedList, Leetcode
-    if (NULL == list1){ return list2;}
-    if (NULL == list2){ return list1;}
+struct Node* mergeTwoLists(struct Node* list_un, struct Node* list_deux){  // merge two sorted LinkedList, Leetcode
+    if (NULL == list_un){ return list_deux;}
+    if (NULL == list_deux){ return list_un;}
 
-    if (list1->val < list2->val){
-        list1->next = mergeTwoLists(list1->next, list2);
-        return list1;
+    if (list_un->val < list_deux->val){
+        list_un->next = mergeTwoLists(list_un->next, list_deux);
+        return list_un;
     }
     else{
-        list2->next = mergeTwoLists(list1, list2->next);
-        return list2;
+        list_deux->next = mergeTwoLists(list_un, list_deux->next);
+        return list_deux;
     }
 }
 
 struct Node* deleteDuplicates(struct Node* head){  // Remove Duplicates from Sorted LinkedList, Leetcode
-    if(!head) { return NULL; }
+    if(!head) { printf("Liste est vide\n"); return NULL; }  // (!head) est (NULL == head)
     
     struct Node* curr = head, *del_node;
     while(curr && curr->next){
@@ -270,36 +245,36 @@ int hasCycle(struct Node *head) {  // Linked List Cycle, Leetcode
     return 0;
 }
 
-struct Node* addTwoNumbers(struct Node* l1, struct Node* l2) {  // Add the two numbers and return the sum LinkedList, Leetcode
+struct Node* addTwoNumbers(struct Node* list_un, struct Node* list_deux) {  // Add the two numbers and return the sum LinkedList, Leetcode
     struct Node* ans = (struct Node*)malloc(sizeof(struct Node));
     struct Node* temp = ans;
     int carry = 0, sum = 0;
-    while(l1 && l2) {
-        sum = l1->val + l2->val + carry;
+    while(list_un && list_deux) {  // tel que deux lists ont des nodes
+        sum = list_un->val + list_deux->val + carry;
         temp->next = (struct Node*)malloc(sizeof(struct Node));
         temp->next->val = sum % 10;
         carry = sum / 10;
         temp = temp->next;
-        l1 = l1->next;
-        l2 = l2->next;
+        list_un = list_un->next;
+        list_deux = list_deux->next;
     }
-    while(l1) {
-        sum = l1->val + carry;
+    while(list_un) {    // tel que première liste a des nodes
+        sum = list_un->val + carry;
         temp->next = (struct Node*)malloc(sizeof(struct Node));
         temp->next->val = sum % 10;
         carry = sum / 10;
         temp = temp->next;
-        l1 = l1->next;
+        list_un = list_un->next;
     }
-    while(l2) {
-        sum = l2->val + carry;
+    while(list_deux) { // tel que deuxième liste a des nodes
+        sum = list_deux->val + carry;
         temp->next = (struct Node*)malloc(sizeof(struct Node));
         temp->next->val = sum % 10;
         carry = sum / 10;
         temp = temp->next;
-        l2 = l2->next;
+        list_deux = list_deux->next;
     }
-    if(carry) {
+    if(carry) {     // s'il nous reste a diviser
         temp->next = (struct Node*)malloc(sizeof(struct Node));
         temp->next->val = carry;
         temp = temp->next;
