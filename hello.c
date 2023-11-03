@@ -2,6 +2,6 @@
 
 int main(){
 
-    printf("Maks MUNAIT\n");
+    printf("Maks MUNAIT!\n");
     return 0;
 }
